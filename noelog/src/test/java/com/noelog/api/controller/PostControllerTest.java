@@ -1,5 +1,6 @@
 package com.noelog.api.controller;
 
+import com.noelog.api.util.ErrorResponseUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +49,10 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"title\": null, \"content\": \"content test\"}")
                 )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("타이틀을 입력해 주세요"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다"))
+                .andExpect(jsonPath("$.validation.title").value(ErrorResponseUtils.POST_TITLE))
                 .andDo(print());
     }
 }
