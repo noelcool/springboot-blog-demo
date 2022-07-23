@@ -27,7 +27,7 @@ public class Post {
         this.content = content;
     }
 
-    @Builder
+    @Builder // 가독성이 좋다, 필요한 값만 받을 수 있다 (오버로딩 가능한 조건에 대해서도)
     public static Post of(PostValue.Req.Creation value) {
         return Post.builder()
                 .title(value.title())
