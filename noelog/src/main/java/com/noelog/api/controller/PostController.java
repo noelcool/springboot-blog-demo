@@ -1,12 +1,11 @@
 package com.noelog.api.controller;
 
+import com.noelog.api.domain.entity.Post;
 import com.noelog.api.domain.value.PostValue;
 import com.noelog.api.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -27,6 +26,11 @@ public class PostController {
         // 3. 응답 필요 없음
         // bad : 서버에서 꼭 이렇게 한다고 fix하지 말고 유연하게 대응하는 것이 좋다
         postService.write(request);
+    }
+
+    @GetMapping("/posts/{postId}")
+    public Post get(@PathVariable(name = "postId") Long id) {
+        return postService.get(id);
     }
 
 

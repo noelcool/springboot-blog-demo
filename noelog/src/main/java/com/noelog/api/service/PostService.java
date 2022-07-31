@@ -17,4 +17,8 @@ public class PostService {
     public void write(PostValue.Req.Creation value) {
         postRepository.save(Post.of(value));
     }
+
+    public Post get(Long id) {
+        return postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 id입니다"));
+    }
 }
