@@ -38,7 +38,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("posts 요청시 test 리턴")
-    void posts요청시_test리턴() throws Exception {
+    void test1() throws Exception {
         // given
         Post post = Post.builder()
                 .title("title test")
@@ -58,7 +58,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("/posts 요청시 title 값은 필수이다")
-    void posts요청시_title값은_필수이다() throws Exception {
+    void test2() throws Exception {
         // given
         Post post = Post.builder()
                 .content("content test")
@@ -80,7 +80,7 @@ class PostControllerTest {
 
     @Test
     @DisplayName("/posts 요청시 DB에 값이 저장된다")
-    void post_요청시_DB에값이_저장된다() throws Exception {
+    void test3() throws Exception {
         // given
         Post post = Post.builder()
                 .title("title test")
@@ -99,6 +99,29 @@ class PostControllerTest {
         Post post_ = postRepository.findAll().get(0);
         assertEquals("title test", post_.getTitle());
         assertEquals("content test", post_.getContent());
+    }
+
+    @Test
+    @DisplayName("글 1개 조회")
+    void test4() throws Exception {
+        // given
+        Post post = Post.builder()
+                .title("title test")
+                .content("content test")
+                .build();
+        postRepository.save(post);
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.
+                        get("/posts/{postId}", post.getId())
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(post.getId()))
+                .andExpect(jsonPath("$.title").value("title test"))
+                .andExpect(jsonPath("$.content").value("content test"))
+                .andDo(print());
+
+        // then
     }
 
 }
