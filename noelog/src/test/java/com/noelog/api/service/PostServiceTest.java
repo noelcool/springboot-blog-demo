@@ -52,8 +52,10 @@ class PostServiceTest {
                 .build();
         postRepository.save(request);
 
+        // client - json 응답에서 샤싣 값 길이를 최대 10글자로 해주세요
+
         //when
-        Post post = postService.get(request.getId());
+        PostValue.Res.PostResponse post = postService.get(request.getId());
 
         //then
         assertNotNull(post);

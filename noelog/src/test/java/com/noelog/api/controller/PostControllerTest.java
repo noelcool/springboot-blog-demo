@@ -52,7 +52,7 @@ class PostControllerTest {
                             .content(json)
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().string("{}"))
+                .andExpect(content().string(""))
                 .andDo(print());
     }
 
@@ -106,7 +106,7 @@ class PostControllerTest {
     void test4() throws Exception {
         // given
         Post post = Post.builder()
-                .title("title test")
+                .title("title test title test title test")
                 .content("content test")
                 .build();
         postRepository.save(post);
