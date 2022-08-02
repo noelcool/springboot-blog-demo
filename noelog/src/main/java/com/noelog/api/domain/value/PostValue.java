@@ -4,6 +4,7 @@ import com.noelog.api.util.DescriptionUtils;
 import com.noelog.api.util.ErrorResponseUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
+import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 
@@ -23,6 +24,20 @@ public final class PostValue {
     }
 
     public final static class Res {
+
+        @Getter
+        public static class PostResponse {
+            private final Long id;
+            private final String title;
+            private final String content;
+
+            @Builder
+            public PostResponse(Long id, String title, String content) {
+                this.id = id;
+                this.title = title.substring(0, Math.min(title.length(), 10));
+                this.content = content;
+            }
+        }
 
     }
 

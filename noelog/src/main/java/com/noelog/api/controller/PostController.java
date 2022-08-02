@@ -29,10 +29,16 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public Post get(@PathVariable(name = "postId") Long id) {
-        return postService.get(id);
+    public PostValue.Res.PostResponse get(@PathVariable(name = "postId") Long id) {
+        PostValue.Res.PostResponse response = postService.get(id);
+        return response;
     }
 
+    @GetMapping("/posts/{postId}/rss")
+    public Post getRss(@PathVariable(name = "postId") Long id) {
+        Post post = postService.getRss(id);
+        return post;
+    }
 
 
 }

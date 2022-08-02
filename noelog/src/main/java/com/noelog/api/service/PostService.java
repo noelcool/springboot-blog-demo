@@ -18,7 +18,19 @@ public class PostService {
         postRepository.save(Post.of(value));
     }
 
-    public Post get(Long id) {
-        return postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 id입니다"));
+    public Post getRss(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 id입니다"));
+    }
+
+    public PostValue.Res.PostResponse get(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글 id입니다"));
+        PostValue.Res.PostResponse response = PostValue.Res.PostResponse.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .build();
+        return response;
     }
 }
