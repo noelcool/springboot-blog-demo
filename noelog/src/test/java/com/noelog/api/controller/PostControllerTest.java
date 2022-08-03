@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.noelog.api.domain.entity.Post;
 import com.noelog.api.repository.PostRepository;
 import com.noelog.api.util.ErrorResponseUtils;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -124,4 +125,37 @@ class PostControllerTest {
         // then
     }
 
+
+    @Test
+    @DisplayName("글 여러개 조회")
+    void test5() throws Exception {
+        // given
+        Post post1 = Post.builder()
+                .title("title test1")
+                .content("content test1")
+                .build();
+        postRepository.save(post1);
+
+        Post post2 = Post.builder()
+                .title("title test2")
+                .content("content test2")
+                .build();
+        postRepository.save(post2);
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.
+                        get("/posts")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", Matchers.is(2)))
+                .andExpect(jsonPath("$[0].id").value(post1.getId()))
+                .andExpect(jsonPath("$[0].title").value("title test1"))
+                .andExpect(jsonPath("$[0].content").value("content test1"))
+                .andExpect(jsonPath("$[1].id").value(post2.getId()))
+                .andExpect(jsonPath("$[1].title").value("title test2"))
+                .andExpect(jsonPath("$[1].content").value("content test2"))
+                .andDo(print());
+
+        // then
+    }
 }
