@@ -1,5 +1,6 @@
 package com.noelog.api.domain.value;
 
+import com.noelog.api.domain.entity.Post;
 import com.noelog.api.util.DescriptionUtils;
 import com.noelog.api.util.ErrorResponseUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,6 +31,12 @@ public final class PostValue {
             private final Long id;
             private final String title;
             private final String content;
+
+            public PostResponse(Post post) {
+                this.id = post.getId();
+                this.title = post.getTitle();
+                this.content = post.getContent();
+            }
 
             @Builder
             public PostResponse(Long id, String title, String content) {
