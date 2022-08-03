@@ -1,6 +1,5 @@
 package com.noelog.api.controller;
 
-import com.noelog.api.domain.entity.Post;
 import com.noelog.api.domain.value.PostValue;
 import com.noelog.api.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -28,17 +28,17 @@ public class PostController {
         postService.write(request);
     }
 
+
+    // 조회 API
+    // 지난 시간 = 단건 조회 API
     @GetMapping("/posts/{postId}")
-    public PostValue.Res.PostResponse get(@PathVariable(name = "postId") Long id) {
-        PostValue.Res.PostResponse response = postService.get(id);
-        return response;
+    public PostValue.Res.PostResponse get(@PathVariable(name = "postId") Long postId) {
+        return postService.get(postId);
     }
 
-    @GetMapping("/posts/{postId}/rss")
-    public Post getRss(@PathVariable(name = "postId") Long id) {
-        Post post = postService.getRss(id);
-        return post;
+    @GetMapping("/posts")
+    public List<PostValue.Res.PostResponse> getList() {
+        return postService.getList();
     }
-
 
 }
