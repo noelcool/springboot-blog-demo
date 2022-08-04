@@ -5,6 +5,7 @@ import com.noelog.api.domain.value.PostValue;
 import com.noelog.api.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class PostService {
                 .build();
     }
 
-    public List<PostValue.Res.PostResponse> getList() {
+    public List<PostValue.Res.PostResponse> getList(Pageable pageable) {
 //        return postRepository.findAll().stream()
 //                .map(post ->
 //                        PostValue.Res.PostResponse.builder()
@@ -45,7 +46,7 @@ public class PostService {
 //                                .content(post.getContent())
 //                                .build())
 //                .collect(Collectors.toList());
-        return postRepository.findAll().stream()
+        return postRepository.findAll(pageable).stream()
                 .map(post -> new PostValue.Res.PostResponse(post))
                 .collect(Collectors.toList());
     }
