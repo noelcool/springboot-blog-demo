@@ -8,8 +8,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -67,27 +72,24 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("글 전체 조회")
+    @DisplayName("글 1페이지 조회")
     void test3() {
-
+        List<Post> requestPosts = IntStream
+                .range(1, 31)
+                .mapToObj(i -> Post.builder()
+                        .title("제목 " + i)
+                        .content("content " + i)
+                        .build()).collect(Collectors.toList());
         //given
-        Post request1 = Post.builder()
-                .title("title test1")
-                .content("content test1")
-                .build();
-        Post request2 = Post.builder()
-                .title("title test2")
-                .content("content test2")
-                .build();
-        Post request3 = Post.builder()
-                .title("title test3")
-                .content("content test3")
-                .build();
-        postRepository.saveAll(List.of(request1, request2, request3));
+        postRepository.saveAll(requestPosts);
 
+        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
         //when
-        List<PostValue.Res.PostResponse> response = postService.getList();
+        List<PostValue.Res.PostResponse> posts = postService.getList(pageable);
 
-        assertEquals(3L, postRepository.count());
+        // then
+        assertEquals(5L, posts.size());
+        assertEquals("제목 30", posts.get(0).getTitle());
+        assertEquals("content 26", posts.get(4).getContent());
     }
 }

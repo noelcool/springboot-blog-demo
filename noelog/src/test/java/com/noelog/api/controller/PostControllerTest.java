@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.noelog.api.domain.entity.Post;
 import com.noelog.api.repository.PostRepository;
 import com.noelog.api.util.ErrorResponseUtils;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -129,31 +133,23 @@ class PostControllerTest {
     @Test
     @DisplayName("글 여러개 조회")
     void test5() throws Exception {
-        // given
-        Post post1 = Post.builder()
-                .title("title test1")
-                .content("content test1")
-                .build();
-        postRepository.save(post1);
-
-        Post post2 = Post.builder()
-                .title("title test2")
-                .content("content test2")
-                .build();
-        postRepository.save(post2);
+        List<Post> requestPosts = IntStream
+                .range(1, 31)
+                .mapToObj(i -> Post.builder()
+                        .title("title " + i)
+                        .content("content " + i)
+                        .build()).collect(Collectors.toList());
+        postRepository.saveAll(requestPosts);
 
         // when
         mockMvc.perform(MockMvcRequestBuilders.
-                        get("/posts")
+                        get("/posts?page=1&sort=id,desc")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()", Matchers.is(2)))
-                .andExpect(jsonPath("$[0].id").value(post1.getId()))
-                .andExpect(jsonPath("$[0].title").value("title test1"))
-                .andExpect(jsonPath("$[0].content").value("content test1"))
-                .andExpect(jsonPath("$[1].id").value(post2.getId()))
-                .andExpect(jsonPath("$[1].title").value("title test2"))
-                .andExpect(jsonPath("$[1].content").value("content test2"))
+                .andExpect(jsonPath("$.length()", is(5)))
+                .andExpect(jsonPath("$[0].id").value(30))
+                .andExpect(jsonPath("$[0].title").value("title 30"))
+                .andExpect(jsonPath("$[0].content").value("content 30"))
                 .andDo(print());
 
         // then
