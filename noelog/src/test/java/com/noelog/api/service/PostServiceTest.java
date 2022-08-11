@@ -1,6 +1,7 @@
 package com.noelog.api.service;
 
 import com.noelog.api.domain.entity.Post;
+import com.noelog.api.domain.request.PostSearch;
 import com.noelog.api.domain.value.PostValue;
 import com.noelog.api.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,9 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -75,21 +73,25 @@ class PostServiceTest {
     @DisplayName("글 1페이지 조회")
     void test3() {
         List<Post> requestPosts = IntStream
-                .range(1, 31)
+                .range(1, 21)
                 .mapToObj(i -> Post.builder()
                         .title("제목 " + i)
                         .content("content " + i)
-                        .build()).collect(Collectors.toList());
+                        .build())
+                .collect(Collectors.toList());
         //given
         postRepository.saveAll(requestPosts);
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .size(10)
+                .build();
 
-        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
         //when
-        List<PostValue.Res.PostResponse> posts = postService.getList(pageable);
+        List<PostValue.Res.PostResponse> posts = postService.getList(postSearch);
 
         // then
-        assertEquals(5L, posts.size());
-        assertEquals("제목 30", posts.get(0).getTitle());
-        assertEquals("content 26", posts.get(4).getContent());
+        assertEquals(10L, posts.size());
+        assertEquals("제목 20", posts.get(0).getTitle());
+        //assertEquals("content 26", posts.get(4).getContent());
     }
 }
