@@ -1,11 +1,10 @@
 package com.noelog.api.controller;
 
+import com.noelog.api.domain.request.PostSearch;
 import com.noelog.api.domain.value.PostValue;
 import com.noelog.api.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,8 +38,8 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<PostValue.Res.PostResponse> getList(@PageableDefault(size = 5) Pageable pageable) {
-        return postService.getList(pageable);
+    public List<PostValue.Res.PostResponse> getList(@ModelAttribute PostSearch postSearch) {
+        return postService.getList(postSearch);
     }
 
 }
