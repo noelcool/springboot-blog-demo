@@ -1,12 +1,10 @@
 package com.noelog.api.domain.entity;
 
 import com.noelog.api.domain.value.PostValue;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,9 +33,18 @@ public class Post {
                 .build();
     }
 
-    // 서비스의 정책을 넣지 말것
-//    public String getTitle() {
-//        return this.title.substring(0, 10);
-//    }
+    public PostValue.Dto.PostEditor.PostEditorBuilder toEditor() {
+        return PostValue.Dto.PostEditor.builder()
+                        .title(title)
+                        .content(content);
+    }
+
+    public void edit(PostValue.Dto.PostEditor postEditor) {
+        title = postEditor.getTitle();
+        content = postEditor.getContent();
+    }
+
+
+
 
 }

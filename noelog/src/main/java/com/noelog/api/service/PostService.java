@@ -7,6 +7,7 @@ import com.noelog.api.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,5 +55,20 @@ public class PostService {
         return postRepository.getList(postSearch).stream()
                 .map(PostValue.Res.PostResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void edit(Long id, PostValue.Req.Edit postEdit) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다"));
+
+        PostValue.Dto.PostEditor.PostEditorBuilder postEditorBuilder = post.toEditor();
+
+        PostValue.Dto.PostEditor postEditor = postEditorBuilder
+                .title(postEdit.getTitle())
+                .content(postEdit.getContent())
+                .build();
+
+        post.edit(postEditor);
+
     }
 }

@@ -6,10 +6,28 @@ import com.noelog.api.util.ErrorResponseUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 
 public final class PostValue {
+
+    public final static class Dto {
+
+        @Getter
+        public static class PostEditor {
+            private final String title;
+            private final String content;
+
+            @Builder
+            public PostEditor(String title, String content) {
+                this.title = title;
+                this.content = content;
+            }
+
+        }
+    }
 
     public final static class Req {
 
@@ -21,6 +39,24 @@ public final class PostValue {
                 @Schema(description = DescriptionUtils.POST_CONTENT) @NotBlank(message = ErrorResponseUtils.POST_CONTENT) String content
         ) {
 
+        }
+
+        @Setter
+        @Getter
+        @ToString
+        public static class Edit {
+
+            @NotBlank(message = "타이틀을 입력하세요")
+            private String title;
+
+            @NotBlank(message = "콘텐츠를 입력해주세요")
+            private String content;
+
+            @Builder
+            public Edit(String title, String content) {
+                this.title = title;
+                this.content = content;
+            }
         }
     }
 

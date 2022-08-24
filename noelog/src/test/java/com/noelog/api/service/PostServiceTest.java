@@ -94,4 +94,53 @@ class PostServiceTest {
         assertEquals("제목 20", posts.get(0).getTitle());
         //assertEquals("content 26", posts.get(4).getContent());
     }
+
+    @Test
+    @DisplayName("글 제목 수정")
+    void test4() {
+        Post post = Post.builder()
+                .title("안졸림")
+                .content("반포자이")
+                .build();
+        //given
+        postRepository.save(post);
+
+        //when
+        PostValue.Req.Edit postEdit = PostValue.Req.Edit.builder()
+                .title("졸려")
+                .content("반포자이")
+                .build();
+        postService.edit(post.getId(), postEdit);
+
+        // then
+        Post changedPost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id = " + post.getId()));
+        assertEquals("졸려", changedPost.getTitle());
+        assertEquals("반포자이", changedPost.getContent());
+    }
+
+    @Test
+    @DisplayName("글 내용 수정")
+    void test5() {
+        Post post = Post.builder()
+                .title("안졸림")
+                .content("반포자이")
+                .build();
+        //given
+        postRepository.save(post);
+
+        //when
+        PostValue.Req.Edit postEdit = PostValue.Req.Edit.builder()
+                .title("안졸림")
+                .content("초가집")
+                .build();
+        postService.edit(post.getId(), postEdit);
+
+        // then
+        Post changedPost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id = " + post.getId()));
+        assertEquals("안졸림", changedPost.getTitle());
+        assertEquals("초가집", changedPost.getContent());
+    }
+
 }

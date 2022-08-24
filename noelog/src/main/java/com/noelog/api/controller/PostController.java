@@ -42,4 +42,12 @@ public class PostController {
         return postService.getList(postSearch);
     }
 
+
+    @PatchMapping("/posts/{postId}")
+    public void edit(@PathVariable Long postId, @RequestBody @Valid PostValue.Req.Edit postEdit) {
+        postService.edit(postId, postEdit);
+    }
+
+
+
 }

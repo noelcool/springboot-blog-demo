@@ -2,6 +2,7 @@ package com.noelog.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.noelog.api.domain.entity.Post;
+import com.noelog.api.domain.value.PostValue;
 import com.noelog.api.repository.PostRepository;
 import com.noelog.api.util.ErrorResponseUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -154,4 +155,33 @@ class PostControllerTest {
 
         // then
     }
+
+
+    @Test
+    @DisplayName("포스트 수정")
+    void test6() throws Exception {
+        Post post = Post.builder()
+                .title("졸려")
+                .content("반포자이")
+                .build();
+
+        postRepository.save(post);
+
+        PostValue.Dto.PostEditor postEditor = PostValue.Dto.PostEditor.builder()
+                .title("안졸려")
+                .content("반포자이")
+                .build();
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.
+                        patch("/posts/{postId}", post.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postEditor)))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        // then
+    }
+
+
 }
